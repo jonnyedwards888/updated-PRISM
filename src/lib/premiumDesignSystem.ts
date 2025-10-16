@@ -5,70 +5,112 @@ const premiumDesignSystem = {
   typography: {
     headings: { 
       fontWeight: 700, 
-      fontFamily: "Inter",
-      lineHeight: "1.2"
+      fontFamily: "Inter, system-ui, sans-serif",
+      lineHeight: "1.2",
+      letterSpacing: "-0.025em"
     },
     body: { 
       fontWeight: 500, 
-      fontFamily: "Inter",
-      lineHeight: "1.6" 
+      fontFamily: "Inter, system-ui, sans-serif",
+      lineHeight: "1.6",
+      fontSize: "16px"
     },
     secondary: { 
       fontWeight: 400, 
-      color: "text-gray-600",
-      fontFamily: "Inter"
+      color: "#64748b",
+      fontFamily: "Inter, system-ui, sans-serif"
     }
   },
   icons: {
     libraries: ["Lucide", "Heroicons", "Phosphor", "Tabler"],
-    forbidden: ["SystemUI", "default browser icons", "emoji icons"]
+    forbidden: ["SystemUI", "default browser icons", "emoji icons"],
+    size: "w-5 h-5 or w-6 h-6 standard sizes"
   },
   spacing: {
-    system: "8px grid system",
-    sections: "minimum 80px vertical spacing between sections",
-    components: "24px internal padding for components",
-    margins: "16px, 24px, 32px, 48px, 64px, 80px increments only"
+    system: "8px grid system - STRICT adherence",
+    sections: "minimum 80px vertical spacing between major sections",
+    components: "24px internal padding for components, 32px for hero sections",
+    margins: "Use only: 16px, 24px, 32px, 48px, 64px, 80px, 96px, 128px",
+    containerPadding: "px-6 md:px-8 lg:px-12 for responsive containers"
   },
   colors: {
-    background: "Clean whites (#ffffff) or subtle grays (#f8fafc, #f1f5f9)",
-    accents: "Single primary color + neutral gray palette",
-    forbidden: ["neon colors", "multiple bright accent colors", "pure black text"],
+    background: "Clean whites (#ffffff) or subtle grays (#fafafa, #f8fafc, #f1f5f9)",
+    backgroundDark: "For dark sections: #0f172a, #1e293b, #334155",
+    accents: "Single primary accent color - vibrant but tasteful (e.g., #3b82f6, #8b5cf6, #10b981)",
+    forbidden: ["neon colors", "multiple bright accent colors", "pure black #000000 text"],
     text: {
-      primary: "#0f172a or #1e293b",
+      primary: "#0f172a or #1e293b - never pure black",
       secondary: "#64748b or #94a3b8", 
-      muted: "#cbd5e1"
+      muted: "#cbd5e1 or #e2e8f0"
+    },
+    gradients: {
+      hero: "Use subtle gradients: linear-gradient(135deg, #667eea 0%, #764ba2 100%) or similar",
+      cards: "Optional: subtle gradient overlays with opacity 0.05-0.1",
+      backgrounds: "Mesh gradients acceptable for large areas with multiple soft color stops"
     }
   },
   layout: {
-    maxWidth: "1200px containers with proper centering",
-    grid: "CSS Grid preferred over flexbox for complex layouts",
-    alignment: "Left-aligned text, centered page layouts",
-    whitespace: "Generous use of whitespace for breathing room"
+    maxWidth: "1280px or 1440px containers with mx-auto centering",
+    grid: "CSS Grid preferred - use gap-6 or gap-8 for spacing",
+    alignment: "Left-aligned text, centered page layouts, balanced asymmetry",
+    whitespace: "GENEROUS whitespace - double what feels comfortable"
   },
   components: {
     buttons: {
-      style: "Subtle shadows (shadow-sm), rounded corners (rounded-lg)",
-      padding: "px-6 py-3 for primary buttons",
-      hover: "Smooth transitions with subtle scale/shadow effects"
+      primary: "bg-blue-600 hover:bg-blue-700, shadow-md hover:shadow-lg, rounded-lg, px-6 py-3, font-semibold, transition-all duration-200",
+      secondary: "bg-white border-2 border-gray-200 hover:border-gray-300, rounded-lg",
+      hover: "Subtle scale on hover (hover:scale-105), smooth transitions 200-300ms",
+      gradient: "Optional gradient buttons: bg-gradient-to-r from-blue-600 to-purple-600"
     },
     cards: {
-      style: "Minimal borders (border-gray-200), proper elevation (shadow-sm)",
-      padding: "p-6 or p-8 for content areas",
-      radius: "rounded-xl for modern feel"
+      style: "bg-white border border-gray-200 hover:border-gray-300, rounded-xl, shadow-sm hover:shadow-md",
+      padding: "p-6 md:p-8 for content areas",
+      radius: "rounded-xl or rounded-2xl for modern feel",
+      hover: "Smooth hover transitions with subtle lift (hover:-translate-y-1)"
     },
     forms: {
-      style: "Clean inputs with proper focus states (ring-2 ring-blue-500)",
+      style: "border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10",
       spacing: "space-y-4 between form elements",
-      labels: "font-medium text-gray-700"
+      labels: "font-semibold text-gray-900 mb-2"
+    },
+    glassmorphism: {
+      enabled: true,
+      style: "backdrop-blur-xl bg-white/80 or bg-gray-900/80 for overlay effects",
+      usage: "Hero sections, modal overlays, floating cards"
+    }
+  },
+  premiumEffects: {
+    noise: "Add subtle noise texture overlay for depth (opacity 0.03-0.05)",
+    blur: "Use backdrop-filter: blur(12px) for glass effects",
+    shadows: {
+      sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+      md: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+      lg: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
+      xl: "0 20px 25px -5px rgb(0 0 0 / 0.1)",
+      colored: "Use colored shadows: 0 10px 40px -10px rgba(59, 130, 246, 0.3)"
+    },
+    animations: {
+      fadeIn: "Fade in elements on load with opacity 0 -> 1",
+      slideUp: "Slide up effect: transform: translateY(20px) -> translateY(0)",
+      duration: "300-600ms for most transitions, slower for page loads",
+      easing: "ease-out or cubic-bezier(0.4, 0, 0.2, 1)"
+    },
+    gradientText: {
+      enabled: true,
+      style: "background: linear-gradient(to right, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;",
+      usage: "Headings, CTAs, special emphasis"
     }
   },
   antiPatterns: [
-    "Comic Sans or system fonts",
-    "More than 2-3 colors in design",
-    "Cramped spacing or layouts",
-    "Overuse of shadows or gradients",
-    "Generic stock photography",
-    "Inconsistent spacing systems"
+    "Comic Sans, Times New Roman, or generic system fonts",
+    "More than 2-3 accent colors in design",
+    "Cramped spacing - less than 40px between sections",
+    "Harsh drop shadows or excessive gradients everywhere",
+    "Generic stock photography without treatment",
+    "Inconsistent spacing systems",
+    "Pure black text (#000000)",
+    "Sharp corners everywhere (min border-radius: 8px)",
+    "No hover states on interactive elements"
   ]
 };
 
@@ -79,42 +121,144 @@ export function enhancePromptWithPremiumDesign(userPrompt: string): string {
   
   const designInstructions = `
 PREMIUM DESIGN SYSTEM - MANDATORY CONSTRAINTS:
-${JSON.stringify(premiumDesignSystem, null, 2)}
+
+YOU ARE CREATING A TOP-TIER, PREMIUM WEB INTERFACE THAT RIVALS THE BEST SAAS PRODUCTS.
+THINK: Linear, Stripe, Vercel, Notion, Framer - WORLD-CLASS DESIGN QUALITY.
 
 CRITICAL DESIGN REQUIREMENTS:
-- Typography: ALL headings use font-weight: 700, body text uses font-weight: 500
-- Font Family: Inter ONLY - no system fonts
-- Icons: Use ONLY premium libraries: ${premiumDesignSystem.icons.libraries.join(', ')}
-- Spacing: Follow 8px grid system religiously
-- Colors: Clean whites/grays with single accent color
-- Layout: Maximum 1200px containers, generous whitespace
-- Components: Subtle shadows, proper elevation, rounded corners
 
-ICON IMPLEMENTATION REQUIREMENTS:
-- ALWAYS include Lucide React CDN in the <head>: <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-- Use Lucide icons with this exact syntax: <i data-lucide="icon-name"></i>
-- After DOM insertion, call lucide.createIcons() to render icons
-- Popular icon names: "chart-bar", "users", "settings", "arrow-right", "check", "star", "heart", "home", "search", "menu"
-- Example: <i data-lucide="chart-bar" class="w-6 h-6"></i>
+1. TYPOGRAPHY (Non-negotiable):
+   - Font Family: Inter font ONLY (include Google Fonts CDN)
+   - Headings: font-weight: 700, line-height: 1.2, letter-spacing: -0.025em
+   - Body: font-weight: 500, font-size: 16px, line-height: 1.6
+   - NEVER use system fonts or generic sans-serif
+   - TEXT CONTRAST IS SACRED: Always ensure text has WCAG AA contrast (4.5:1 minimum)
 
-IMAGE AND LOGO REQUIREMENTS:
-- NEVER use placeholder.com, via.placeholder.com, or any placeholder services
-- Use ONLY high-quality, royalty-free image services:
-  * Unsplash: https://images.unsplash.com/photo-[ID]?w=[WIDTH]&h=[HEIGHT]&fit=crop&crop=center
-  * Picsum: https://picsum.photos/[WIDTH]/[HEIGHT]?random=[SEED]
-- For logos, use simple SVG shapes or CSS-based designs instead of external images
-- Profile photos: Use Unsplash portrait photos with specific dimensions
-- Hero images: Use Unsplash landscape photos with proper aspect ratios
-- Company logos: Create simple SVG or CSS-based geometric designs
-- Example: <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face" alt="Profile photo" class="w-16 h-16 rounded-full object-cover">
-- Always include proper alt text and responsive classes
+2. COLORS & DESIGN THEME (CRITICAL):
+   **CONSISTENT DARK THEME ACROSS ALL PAGES:**
+   - EVERY page must use the SAME background color scheme
+   - Primary Background: Dark (#0a0a0b, #0f0f10, #1a1a1c) - premium black
+   - Subtle gradient overlays acceptable: linear-gradient(135deg, #0a0a0b 0%, #1a1a1c 100%)
+   - NEVER mix white backgrounds with dark backgrounds on different pages
+   - ALL sections use dark backgrounds - consistency is mandatory
+   
+   **TEXT COLORS (Contrast Rules):**
+   - On dark backgrounds: Use white (#ffffff), light gray (#e2e8f0, #f1f5f9)
+   - Headings on dark: #ffffff or #f8fafc (bright white)
+   - Body text on dark: #94a3b8, #cbd5e1 (medium gray)
+   - FORBIDDEN: Blue/purple text on blue/purple backgrounds
+   - FORBIDDEN: Low-contrast text that blends into background
+   
+   **ACCENT COLORS:**
+   - Use vibrant accents that POP against dark backgrounds
+   - Good: #3b82f6 (blue), #8b5cf6 (purple), #10b981 (green), #f59e0b (amber)
+   - Use for: Buttons, links, icons, highlights
+   - NEVER use accent color for large text areas on similar-colored backgrounds
 
-FORBIDDEN ELEMENTS:
+3. SPACING (8px Grid System - STRICT):
+   - Section spacing: minimum 80px between major sections
+   - Component padding: 24px internal, 32px for hero sections
+   - Use only: 16px, 24px, 32px, 48px, 64px, 80px, 96px, 128px
+   - Containers: max-width 1280px with mx-auto
+   - GENEROUS whitespace - double what feels comfortable
+
+4. COMPONENTS & EFFECTS:
+   - Buttons: 
+     * Primary: bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg rounded-lg px-6 py-3
+     * Gradient option: bg-gradient-to-r from-blue-600 to-purple-600
+     * Hover: scale-105 transform with 200ms transition
+   
+   - Cards:
+     * Style: bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md
+     * Padding: p-6 md:p-8
+     * Hover: -translate-y-1 transform with smooth transition
+   
+   - Glass Morphism (USE THIS):
+     * backdrop-blur-xl bg-white/80 for floating elements
+     * Subtle overlay effects on hero sections
+   
+   - Shadows (Use colored shadows):
+     * Regular: 0 4px 6px -1px rgb(0 0 0 / 0.1)
+     * Colored: 0 10px 40px -10px rgba(59, 130, 246, 0.3)
+
+5. PREMIUM VISUAL EFFECTS & ANIMATIONS:
+   **TASTEFUL EFFECTS ONLY:**
+   - Subtle noise texture: opacity 0.02-0.03 for depth (very subtle)
+   - Hover animations: Scale (1.02-1.05), opacity changes, subtle lift (-2px to -4px)
+   - Transition duration: 200-400ms with ease-out easing
+   - Border radius: minimum 8px, prefer rounded-xl (12px) or rounded-2xl (16px)
+   
+   **STRICTLY FORBIDDEN (Tacky/Amateur):**
+   ❌ NO floating geometric shapes (circles, squares, triangles)
+   ❌ NO bouncing or rotating decorative elements
+   ❌ NO excessive particle effects or confetti
+   ❌ NO rainbow gradients or overly bright colors
+   ❌ NO Comic Sans or playful fonts
+   ❌ NO auto-playing animations that distract
+   ❌ NO wobbling, shaking, or excessive motion
+   
+   **ACCEPTABLE ANIMATIONS:**
+   ✅ Smooth fade-in on scroll (opacity 0 → 1, translateY 20px → 0)
+   ✅ Button hover effects (subtle scale, color shift)
+   ✅ Card hover lift with shadow (translateY -2px, shadow increase)
+   ✅ Loading spinners (simple, minimal)
+   ✅ Progress bars (smooth, linear)
+   ✅ Smooth page transitions (fade, slide)
+
+6. ICONS & VISUAL ELEMENTS:
+   **ICON IMPLEMENTATION:**
+   - Include: <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+   - Usage: <i data-lucide="icon-name"></i>
+   - Initialize: Add <script>lucide.createIcons()</script> before closing body
+   - Popular icons: "sparkles", "zap", "star", "check-circle", "arrow-right", "users", "trending-up", "shield-check"
+   
+   **PREMIUM ICON STYLING (Avoid Basic Look):**
+   - Don't use flat, bright colored squares (#3b82f6 background with white icon)
+   - Instead, use sophisticated approaches:
+     * Gradient backgrounds: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+     * Subtle glassmorphism: backdrop-blur-lg bg-white/10 border border-white/20
+     * Icon-only with colored stroke: stroke color matching theme, no background
+     * Soft shadows: box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15)
+   - Icon containers: rounded-xl or rounded-2xl, padding p-3 or p-4
+   - On dark backgrounds: Use semi-transparent white backgrounds (rgba(255,255,255,0.05))
+   
+   **EXAMPLE: Premium Icon Card Styling:**
+   - Container: gradient background rgba(99,102,241,0.1) to rgba(139,92,246,0.1)
+   - Border: 1px solid rgba(255,255,255,0.1)
+   - Border-radius: 16px
+   - Backdrop-filter: blur(10px)
+   - Box-shadow: 0 4px 20px rgba(0,0,0,0.1)
+   - Icon color: #6366f1 (vibrant purple/blue)
+
+7. IMAGES:
+   - NEVER use placeholder.com or via.placeholder.com
+   - Unsplash: https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200&h=600&fit=crop
+   - Picsum: https://picsum.photos/1200/600?random=1
+   - Use proper dimensions and add loading="lazy"
+
+8. LAYOUT BEST PRACTICES:
+   - Hero section: min-height: 600px with centered content
+   - CSS Grid for complex layouts with gap-6 or gap-8
+   - Responsive: Mobile-first with proper breakpoints (sm, md, lg, xl)
+   - Flex containers: justify-between and items-center for balance
+
+STRICTLY FORBIDDEN:
 ${premiumDesignSystem.antiPatterns.map(pattern => `- ${pattern}`).join('\n')}
+- Basic, bland designs without personality
+- No hover states or interactions
+- Cramped layouts with insufficient spacing
+- Using default browser styles
 
-Original User Request: ${userPrompt}
+ORIGINAL USER REQUEST: ${userPrompt}
 
-Generate code that strictly follows these premium design constraints. Focus on clean, modern, professional aesthetics that rival top-tier SaaS products. ENSURE all icons are properly implemented using Lucide with the CDN and createIcons() call.`;
+GENERATE A STUNNING, PREMIUM WEB INTERFACE WITH:
+✨ Beautiful gradients and glass morphism effects
+✨ Smooth animations and micro-interactions  
+✨ Perfect spacing and typography
+✨ Professional color scheme with subtle accents
+✨ Modern, clean aesthetic that feels expensive
+
+Make it feel like a \$10,000 custom design. Every pixel matters.`;
 
   console.log("✨ [Prism] Premium instructions prepared with icon implementation guide");
   return designInstructions;

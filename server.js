@@ -60,32 +60,31 @@ app.post('/api/generate', async (req, res) => {
       });
     }
 
-    console.log('Generating interface for prompt:', prompt);
+    console.log('🎨 [Prism Server] Generating interface with premium design constraints...');
+    console.log('📏 [Prism Server] Enhanced prompt length:', prompt.length, 'characters');
 
+    // The prompt is already enhanced with premium design constraints from the frontend
+    // via enhancePromptWithPremiumDesign() - just pass it directly to Claude
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 4000,
+      max_tokens: 8000, // Increased for complete, polished implementations
       messages: [{
         role: 'user',
-        content: `You are a web developer. Create a complete, functional HTML/CSS/JavaScript web interface based on this description: "${prompt}"
-
-Requirements:
-- Return ONLY valid HTML code (no markdown, no explanations)
-- Include all necessary CSS and JavaScript inline
-- Make it responsive and modern
-- Use a clean, professional design
-- Ensure it's fully functional when rendered
-- Use modern CSS features like flexbox/grid
-- Include smooth animations and transitions
-- Make it mobile-friendly
-
-Return the complete HTML document:`
+        content: prompt // Already contains premium design system constraints + user request
       }]
     });
 
     const generatedCode = message.content[0].text;
     
-    console.log('Generated code length:', generatedCode.length);
+    console.log('✅ [Prism Server] Generated code length:', generatedCode.length, 'chars');
+    console.log('📊 [Token Usage]:', message.usage);
+    console.log('⚠️  [Token Limit Check]:', message.usage.output_tokens >= 7800 ? 'NEAR LIMIT - Consider increasing!' : 'OK');
+    console.log('\n📋 [CLAUDE RESPONSE PREVIEW - First 500 chars]:\n');
+    console.log(generatedCode.substring(0, 500));
+    console.log('\n...\n');
+    console.log('\n📋 [CLAUDE RESPONSE PREVIEW - Last 300 chars]:\n');
+    console.log(generatedCode.substring(generatedCode.length - 300));
+    console.log('\n========================================\n');
     
     res.json({ 
       success: true, 

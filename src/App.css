@@ -33,7 +33,6 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   background-color: #0B0B0F; /* Fallback background */
   color: white;
   overflow-x: hidden;
@@ -48,12 +47,18 @@ body {
   background-color: #0B0B0F;
   min-height: 100vh;
   overflow-x: hidden;
-  /* Animation removed to prevent issues */
+  /* Allow vertical scrolling by default for landing page */
 }
 
 /* Add padding only when navbar is visible (landing page) */
 .app:has(.navbar) {
   padding-top: 70px;
+}
+
+/* Only prevent scrolling when in workspace view */
+.app:has(.workspace-view) {
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* Animation keyframes removed */
@@ -292,8 +297,10 @@ body {
   flex-direction: column;
   padding: 1.5rem;
   overflow-y: auto;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  background: rgb(12, 12, 14); /* Darker, less blue */
+  overflow-x: hidden;
+  background: rgb(12, 12, 14);
+  height: 100%;
+  min-height: 0;
 }
 
 .chat-messages {
@@ -1781,7 +1788,9 @@ body {
     rgb(10, 10, 12) 0%, 
     rgb(18, 18, 22) 50%, 
     rgb(24, 24, 28) 100%);
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   overflow: hidden;
 }
 
@@ -1805,6 +1814,7 @@ body {
 /* Workspace Left - Chat Panel */
 .workspace-left {
   width: 380px;
+  height: 100vh;
   background: rgb(12, 12, 14); /* Darker to match chat container */
   border-right: 1px solid rgb(25, 25, 28);
   display: flex;
@@ -1853,12 +1863,12 @@ body {
 
 .workspace-right {
   flex: 1;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 0;
   background: rgb(10, 10, 12);
-  min-height: 600px;
   overflow: hidden;
 }
 
@@ -3955,7 +3965,7 @@ body.grain-effect::before {
 .editor-container {
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   flex: 1;
   overflow: hidden;
   position: relative;
@@ -4155,19 +4165,17 @@ body.grain-effect::before {
   resize: none; /* Prevent manual resize */
   min-height: 48px; /* Set a min-height */
 }
-
-.prompt-input::placeholder {
-  color: #6b7280;
-}
-
 /* Unified Workspace/Dashboard View */
 .workspace-view {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding-top: 0; /* Remove padding from .app */
-  background: #0B0B0F;
+  width: 100vw;
+  background: #0f172a;
   overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
 .workspace-split-pane {
@@ -5021,7 +5029,7 @@ iframe[title="Generated Interface Preview"] body > * {
 .editor-container {
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   flex: 1;
   overflow: hidden;
   position: relative;
@@ -5483,11 +5491,28 @@ iframe[title="Generated Interface Preview"] body > * {
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-/* Professional workspace layout */
-.workspace-body {
-  display: flex;
-  height: calc(100vh - 80px);
-  position: relative;
+/* Professional workspace layout - SplitPane container */
+.workspace-split-pane {
+  flex: 1 !important;
+  height: 100% !important;
+  display: flex !important;
+  overflow: hidden !important;
+}
+
+.workspace-split-pane > .Pane {
+  overflow: hidden !important;
+}
+
+.workspace-split-pane > .Pane1 {
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.workspace-split-pane > .Pane2 {
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
 .workspace-sidebar {
@@ -5499,12 +5524,36 @@ iframe[title="Generated Interface Preview"] body > * {
   position: relative;
   min-width: 280px;
   max-width: 600px;
+  overflow: hidden;
 }
 
 .workspace-main {
   background: #0f172a;
   height: 100%;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.log-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  min-height: 0;
+}
+
+.chat-input-form {
+  flex-shrink: 0;
+  padding: 1rem;
+  border-top: 1px solid #374151;
 }
 
 /* Professional edge-based resizer */
@@ -5663,3 +5712,11 @@ iframe[title="Generated Interface Preview"] body > * {
     transform: scale(0.8);
   }
 }
+
+/* DEBUG: Uncomment these lines to see layout borders
+.editor-workspace { outline: 3px solid red !important; }
+.workspace-left { outline: 3px solid yellow !important; }
+.workspace-right { outline: 3px solid green !important; }
+.chat-container { outline: 3px solid cyan !important; }
+.editor-container { outline: 3px solid magenta !important; }
+*/
