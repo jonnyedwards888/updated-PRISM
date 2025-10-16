@@ -1,0 +1,167 @@
+/* Code Viewer Styles */
+.code-viewer {
+  display: flex;
+  height: 100%;
+  background: #1a1a1a;
+  color: #e5e5e5;
+}
+
+.code-viewer-sidebar {
+  width: 300px;
+  background: #252526;
+  border-right: 1px solid #3c3c3c;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-viewer-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+}
+
+.code-viewer-header {
+  padding: 12px 16px;
+  background: #2d2d30;
+  border-bottom: 1px solid #3c3c3c;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.code-viewer-header h3 {
+  margin: 0;
+  color: #cccccc;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.file-tree {
+  flex: 1;
+  padding: 8px 0;
+  overflow-y: auto;
+}
+
+.file-tree-folder {
+  padding: 4px 16px;
+  font-size: 13px;
+  color: #cccccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.file-tree-folder:hover {
+  background: #2a2d2e;
+}
+
+.file-tree-item {
+  padding: 4px 16px;
+  font-size: 13px;
+  color: #cccccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.1s ease;
+}
+
+.file-tree-item:hover {
+  background: #2a2d2e;
+}
+
+.file-tree-item.selected {
+  background: #094771;
+  color: #ffffff;
+}
+
+.code-viewer-content {
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+  background: #1e1e1e;
+}
+
+/* Monaco Editor container styling */
+.code-viewer-content .monaco-editor {
+  background: #1e1e1e !important;
+}
+
+.code-viewer-content .monaco-editor .margin {
+  background: #1e1e1e !important;
+}
+
+.code-viewer-content .monaco-editor .monaco-editor-background {
+  background: #1e1e1e !important;
+}
+
+/* Enhanced scrollbar styling for Monaco */
+.code-viewer-content .monaco-scrollable-element > .scrollbar > .slider {
+  background: rgba(121, 121, 121, 0.4) !important;
+}
+
+.code-viewer-content .monaco-scrollable-element > .scrollbar > .slider:hover {
+  background: rgba(121, 121, 121, 0.7) !important;
+}
+
+/* Line numbers styling */
+.code-viewer-content .monaco-editor .margin-view-overlays .line-numbers {
+  color: #858585 !important;
+}
+
+/* Prism.js theme overrides for dark mode */
+.code-viewer .token.comment,
+.code-viewer .token.prolog,
+.code-viewer .token.doctype,
+.code-viewer .token.cdata {
+  color: #6a9955;
+}
+
+.code-viewer .token.punctuation {
+  color: #d4d4d4;
+}
+
+.code-viewer .token.property,
+.code-viewer .token.tag,
+.code-viewer .token.boolean,
+.code-viewer .token.number,
+.code-viewer .token.constant,
+.code-viewer .token.symbol,
+.code-viewer .token.deleted {
+  color: #b5cea8;
+}
+
+.code-viewer .token.selector,
+.code-viewer .token.attr-name,
+.code-viewer .token.string,
+.code-viewer .token.char,
+.code-viewer .token.builtin,
+.code-viewer .token.inserted {
+  color: #ce9178;
+}
+
+.code-viewer .token.operator,
+.code-viewer .token.entity,
+.code-viewer .token.url,
+.code-viewer .language-css .token.string,
+.code-viewer .style .token.string {
+  color: #d4d4d4;
+}
+
+.code-viewer .token.atrule,
+.code-viewer .token.attr-value,
+.code-viewer .token.keyword {
+  color: #569cd6;
+}
+
+.code-viewer .token.function,
+.code-viewer .token.class-name {
+  color: #dcdcaa;
+}
+
+.code-viewer .token.regex,
+.code-viewer .token.important,
+.code-viewer .token.variable {
+  color: #d16969;
+}
