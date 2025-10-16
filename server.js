@@ -67,22 +67,37 @@ app.post('/api/generate', async (req, res) => {
     // via enhancePromptWithPremiumDesign() - just pass it directly to Claude
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 8000, // Increased for complete, polished implementations
+      max_tokens: 16000, // Very high for testing - ensures complete implementations
       messages: [{
         role: 'user',
         content: prompt // Already contains premium design system constraints + user request
       }]
     });
 
-    const generatedCode = message.content[0].text;
+    const rawResponse = message.content[0].text;
+    
+    // Extract HTML code from markdown code blocks
+    const htmlMatch = rawResponse.match(/```html\s*([\s\S]*?)```/);
+    const generatedCode = htmlMatch ? htmlMatch[1].trim() : rawResponse;
+    
+    // Extract explanation/description (everything outside HTML blocks)
+    const explanation = rawResponse.replace(/```html[\s\S]*?```/g, '').trim();
     
     console.log('✅ [Prism Server] Generated code length:', generatedCode.length, 'chars');
     console.log('📊 [Token Usage]:', message.usage);
-    console.log('⚠️  [Token Limit Check]:', message.usage.output_tokens >= 7800 ? 'NEAR LIMIT - Consider increasing!' : 'OK');
-    console.log('\n📋 [CLAUDE RESPONSE PREVIEW - First 500 chars]:\n');
+    console.log('⚠️  [Token Limit Check]:', message.usage.output_tokens >= 15500 ? 'NEAR LIMIT - Consider increasing!' : 'OK');
+    console.log('💰 [Estimated Cost]:', `~$${((message.usage.input_tokens * 3 / 1000000) + (message.usage.output_tokens * 15 / 1000000)).toFixed(4)}`);
+    
+    if (explanation && explanation.length > 50) {
+      console.log('\n💬 [AI EXPLANATION - Hidden from user]:\n');
+      console.log(explanation);
+      console.log('\n========================================\n');
+    }
+    
+    console.log('\n📋 [HTML CODE PREVIEW - First 500 chars]:\n');
     console.log(generatedCode.substring(0, 500));
     console.log('\n...\n');
-    console.log('\n📋 [CLAUDE RESPONSE PREVIEW - Last 300 chars]:\n');
+    console.log('\n📋 [HTML CODE PREVIEW - Last 300 chars]:\n');
     console.log(generatedCode.substring(generatedCode.length - 300));
     console.log('\n========================================\n');
     

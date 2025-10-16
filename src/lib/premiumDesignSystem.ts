@@ -134,13 +134,43 @@ CRITICAL DESIGN REQUIREMENTS:
    - NEVER use system fonts or generic sans-serif
    - TEXT CONTRAST IS SACRED: Always ensure text has WCAG AA contrast (4.5:1 minimum)
 
-2. COLORS & DESIGN THEME (CRITICAL):
-   **CONSISTENT DARK THEME ACROSS ALL PAGES:**
-   - EVERY page must use the SAME background color scheme
-   - Primary Background: Dark (#0a0a0b, #0f0f10, #1a1a1c) - premium black
-   - Subtle gradient overlays acceptable: linear-gradient(135deg, #0a0a0b 0%, #1a1a1c 100%)
-   - NEVER mix white backgrounds with dark backgrounds on different pages
-   - ALL sections use dark backgrounds - consistency is mandatory
+2. COLORS & DESIGN THEME (CRITICAL - READ THIS CAREFULLY):
+   **MANDATORY: ONE BACKGROUND COLOR FOR ENTIRE WEBSITE**
+   
+   STEP 1 - Choose ONE background color at the start:
+   - Pick: #0a0a0b (recommended), #0f0f10, or #1a1a1c
+   
+   STEP 2 - Apply to body tag (REQUIRED):
+   - Set body style attribute: background #0a0a0b, margin 0, padding 0
+   - Example body tag with inline style for background
+   
+   STEP 3 - NEVER change background in any section:
+   - Hero section: NO separate background (inherits body)
+   - Features section: NO separate background (inherits body)
+   - Pricing section: NO separate background (inherits body)
+   - Footer: NO separate background (inherits body)
+   - ALL sections: Use background transparent or no background property
+   
+   FORBIDDEN - THESE WILL CAUSE REJECTION:
+   - NO section-specific backgrounds like background #1a1a2e
+   - NO gradient backgrounds on hero that differ from body
+   - NO white or colored section backgrounds
+   - NO alternating backgrounds between sections
+   
+   CORRECT APPROACH:
+   - Set body background once to chosen color
+   - All sections inherit or use transparent
+   - All content sits on same background
+   
+   EXAMPLES OF CORRECT IMPLEMENTATION:
+   - Landing page: body #0a0a0b, all sections transparent
+   - About page: SAME body #0a0a0b, all sections transparent
+   - Contact page: SAME body #0a0a0b, all sections transparent
+   
+   CONSISTENCY CHECK:
+   - If user scrolls from top to bottom: SAME background color
+   - If user navigates between pages: SAME background color
+   - No visual background changes anywhere on site
    
    **TEXT COLORS (Contrast Rules):**
    - On dark backgrounds: Use white (#ffffff), light gray (#e2e8f0, #f1f5f9)
@@ -162,24 +192,53 @@ CRITICAL DESIGN REQUIREMENTS:
    - Containers: max-width 1280px with mx-auto
    - GENEROUS whitespace - double what feels comfortable
 
-4. COMPONENTS & EFFECTS:
-   - Buttons: 
-     * Primary: bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg rounded-lg px-6 py-3
-     * Gradient option: bg-gradient-to-r from-blue-600 to-purple-600
-     * Hover: scale-105 transform with 200ms transition
+4. PREMIUM CARD DESIGN WITH DEPTH (CRITICAL):
+   **Cards must have sophisticated visual depth with multiple layers:**
    
-   - Cards:
-     * Style: bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md
-     * Padding: p-6 md:p-8
-     * Hover: -translate-y-1 transform with smooth transition
+   BASE STRUCTURE:
+   - Background: rgba(255,255,255,0.03) on dark backgrounds
+   - Border radius: 24px (rounded-2xl)
+   - Padding: 40px (generous internal spacing)
+   - Border: 1px solid rgba(255,255,255,0.1)
    
-   - Glass Morphism (USE THIS):
-     * backdrop-blur-xl bg-white/80 for floating elements
-     * Subtle overlay effects on hero sections
+   DEPTH LAYER 1 - Subtle Background Gradient:
+   - Add diagonal gradient for depth: linear-gradient(135deg, rgba(99,102,241,0.05) 0%, rgba(139,92,246,0.02) 100%)
+   - Creates subtle color shift top-left to bottom-right
    
-   - Shadows (Use colored shadows):
-     * Regular: 0 4px 6px -1px rgb(0 0 0 / 0.1)
-     * Colored: 0 10px 40px -10px rgba(59, 130, 246, 0.3)
+   DEPTH LAYER 2 - Top-Left Glow (Like reference image):
+   - Use ::before pseudo-element positioned at top-left corner
+   - Gradient glow: radial-gradient(circle at top left, rgba(99,102,241,0.15) 0%, transparent 70%)
+   - Size: 200px x 200px, border-radius matches card
+   
+   DEPTH LAYER 3 - Inset Highlight:
+   - box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.05)
+   - Creates subtle inner highlight at top edge
+   
+   DEPTH LAYER 4 - Outer Shadow:
+   - box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08)
+   - Hover: 0 12px 48px rgba(99,102,241,0.15) (colored shadow)
+   
+   ICON STYLING IN CARDS:
+   - Don't use flat colored squares
+   - Use gradient backgrounds: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+   - Icon containers: 56px x 56px, rounded-xl, padding 14px
+   - Subtle glow: box-shadow: 0 4px 20px rgba(99,102,241,0.2)
+   
+   HOVER EFFECTS:
+   - transform: translateY(-4px) - subtle lift
+   - Increase gradient opacity 20%
+   - Brighten border to rgba(255,255,255,0.15)
+   - Transition: all 0.3s ease
+   
+   BUTTONS:
+   - Gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)
+   - Rounded-lg (12px), padding: 14px 32px
+   - Hover: scale(1.02), shadow increase
+   
+   GLASS MORPHISM:
+   - backdrop-filter: blur(16px)
+   - background: rgba(255,255,255,0.05)
+   - border: 1px solid rgba(255,255,255,0.1)
 
 5. PREMIUM VISUAL EFFECTS & ANIMATIONS:
    **TASTEFUL EFFECTS ONLY:**

@@ -4289,12 +4289,12 @@ ${extractedJs}`;
 
         <SplitPane 
           split="vertical" 
-          minSize={250} 
-          maxSize={600} 
-          defaultSize={350}
+          minSize={320} 
+          maxSize={650} 
+          defaultSize={450}
           className="workspace-split-pane"
           pane1Style={{ background: 'rgb(20, 20, 22)' }}
-          pane2Style={{ background: '#0f172a' }}
+          pane2Style={{ background: '#0a0a0f', borderRadius: '12px 12px 0 0' }}
         >
           <div className="workspace-sidebar">
             <div className="control-panel">

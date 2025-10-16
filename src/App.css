@@ -574,6 +574,7 @@ body {
   height: calc(100vh - 200px);
   min-height: 600px;
   position: relative;
+  background: #0a0a0f;
   
   /* Smooth viewport transitions */
   transition: all 0.4s ease-in-out;
@@ -586,10 +587,12 @@ body {
   width: 100%;
   height: 100vh;
   border: none !important;
-  background: white;
+  background: #0a0a0f;
   margin: 0;
   padding: 0;
   display: block;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
   /* Performance optimizations */
   will-change: auto;
   transform: translateZ(0);
@@ -610,8 +613,6 @@ body {
   flex: 1;
   height: 100vh;
   border: none !important;
-  margin: 0;
-  padding: 0;
   background: transparent !important;
 }
 
@@ -621,19 +622,28 @@ body {
   border-radius: 16px;
 }
 
-.editor-container.viewport-mobile .preview-iframe {
+.editor-container.Viewport-mobile .preview-iframe {
   border-radius: 20px;
 }
 
-/* Static Preview Styling */
-.static-preview {
-  background: white;
-  border-radius: 8px;
+/* Lovable-style rounded corners for all iframes */
+.editor-container .preview-iframe,
+.editor-container iframe,
+.workspace-main iframe,
+.workspace-main .preview-iframe,
+.workspace-main .live-preview,
+.clean-preview-container,
+.clean-preview-container iframe {
+  border-radius: 12px 12px 0 0;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
+  background: #0a0a0f;
+}
+
+/* Mobile/Tablet views also get rounded corners */
+.editor-container.viewport-mobile .preview-iframe,
+.editor-container.viewport-tablet .preview-iframe {
+  border-radius: 12px 12px 0 0;
+  background: #0a0a0f;
 }
 
 .static-preview:hover {
@@ -1903,20 +1913,28 @@ body {
   background-clip: text;
 }
 
-/* 🎯 SIMPLE: Base44-Style Generation Area (Static, No Entrance Animation) */
+/* Empty canvas container - centers the generation area */
+.empty-canvas {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 🎯 SIMPLE: Base44-Style Generation Area (Static, Centered) */
 .simple-generation-area {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  padding: 3rem 2rem;
+  max-width: 500px;
+  padding: 4rem 3rem;
   color: rgba(255, 255, 255, 0.9);
   text-align: center;
   background: rgba(15, 15, 18, 0.4);
-  border-radius: 16px;
+  border-radius: 20px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  margin: 2rem;
   opacity: 1;
   /* No animations - static appearance */
 }
@@ -3973,6 +3991,8 @@ body.grain-effect::before {
   padding: 0 !important;
   gap: 0 !important;
   box-sizing: border-box !important;
+  border-radius: 12px 12px 0 0;
+  background: #0a0a0f;
 }
 
 .sidebar-panel {
@@ -4318,6 +4338,17 @@ body.grain-effect::before {
 .viewport-btn.active:hover {
   background: linear-gradient(135deg, #5b52e8, #8b5cf6);
   transform: translateY(-1px);
+}
+
+/* Hide any viewport indicator labels/badges */
+.viewport-btn::after,
+.viewport-btn::before,
+.viewport-indicator,
+[class*="viewport"][class*="indicator"],
+[class*="viewport"][class*="label"] {
+  display: none !important;
+  content: none !important;
+  visibility: hidden !important;
 }
 
 .viewport-separator {
@@ -5420,27 +5451,28 @@ iframe[title="Generated Interface Preview"] body > * {
 }
 
 .fullscreen-btn:hover {
-  background: #374151;
+  background: rgba(255, 255, 255, 0.1);
   border-color: #6b7280;
-  color: #f9fafb;
+  color: white;
 }
 
-/* Professional chat input design */
+/* Professional chat input design - Lovable Style */
 .chat-input-container {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgb(32, 32, 36);
-  border: 1px solid #374151;
-  border-radius: 8px;
-  padding: 12px;
-  position: relative;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: rgb(15, 15, 18);
+  border: 1px solid rgb(30, 30, 32);
+  border-radius: 16px;
+  padding: 10px 16px 10px 16px;
+  margin: 0 20px 20px 20px;
+  transition: none;
 }
 
 .chat-input-container:focus-within {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
+  border-color: rgb(30, 30, 32);
+  outline: none;
+  box-shadow: none;
 }
 
 .chat-input {
@@ -5450,7 +5482,7 @@ iframe[title="Generated Interface Preview"] body > * {
   color: #f9fafb;
   font-size: 14px;
   outline: none !important;
-  padding: 2px 0;
+  padding: 2px 4px 2px 4px;
   line-height: 1.4;
   box-shadow: none !important;
 }
@@ -5497,6 +5529,20 @@ iframe[title="Generated Interface Preview"] body > * {
   height: 100% !important;
   display: flex !important;
   overflow: hidden !important;
+  gap: 0 !important;
+}
+
+.workspace-split-pane .Resizer {
+  background: rgba(255, 255, 255, 0.08) !important;
+  opacity: 1 !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  width: 1px !important;
+  cursor: col-resize !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  flex-shrink: 0 !important;
 }
 
 .workspace-split-pane > .Pane {
@@ -5517,23 +5563,27 @@ iframe[title="Generated Interface Preview"] body > * {
 
 .workspace-sidebar {
   background: rgb(20, 20, 22);
-  border-right: 1px solid #374151;
+  border-right: none;
   height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-  min-width: 280px;
-  max-width: 600px;
+  min-width: 380px;
+  max-width: 650px;
   overflow: hidden;
 }
 
 .workspace-main {
-  background: #0f172a;
+  background: #0a0a0f;
   height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  margin-left: 0;
+  padding-left: 0;
 }
 
 .control-panel {
@@ -5552,7 +5602,7 @@ iframe[title="Generated Interface Preview"] body > * {
 
 .chat-input-form {
   flex-shrink: 0;
-  padding: 1rem;
+  padding: 1rem 0;
   border-top: 1px solid #374151;
 }
 
