@@ -6,7 +6,7 @@ import SplitPane from 'react-split-pane';
 import './App.css';
 import './CodeViewer.css';
 import { IconLibrary } from './components/IconLibrary';
-import { enhancePromptWithPremiumDesign } from './lib/premiumDesignSystem';
+import { enhancePromptWithPremiumDesignV3 } from './lib/premiumDesignSystemV3';
 
 // Declare Lucide for TypeScript
 declare global {
@@ -1163,7 +1163,95 @@ const PropertiesPanel = ({ selectedElement, onClose, addStyleEdit, generateSelec
         {element.className && typeof element.className === 'string' && element.className.split(' ').map(c => c && <span key={c} className="element-class">.{c}</span>)}
         {element.id && <span className="element-id">#{element.id}</span>}
       </div>
+      
+      {/* Page Settings Section - Always Visible */}
+      <div className="properties-list" style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.08)', paddingBottom: '16px', marginBottom: '0' }}>
+        <div className="background-effects-section">
+          <label className="property-label">🎨 Page Settings</label>
+          
+          {/* Page Background Color */}
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ fontSize: '13px', color: '#6b7280', display: 'block', marginBottom: '8px' }}>
+              Background Color
+            </label>
+            <div className="property-input-group">
+              <input
+                type="color"
+                className="color-input"
+                defaultValue="#1a1a2e"
+                onChange={(e) => {
+                  const container = document.querySelector('[data-prism-preview-container]');
+                  if (container) {
+                    (container as HTMLElement).style.background = e.target.value;
+                  }
+                }}
+              />
+              <input
+                type="text"
+                className="text-input"
+                defaultValue="#1a1a2e"
+                placeholder="#1a1a2e"
+                onChange={(e) => {
+                  const container = document.querySelector('[data-prism-preview-container]');
+                  if (container) {
+                    (container as HTMLElement).style.background = e.target.value;
+                  }
+                }}
+              />
+            </div>
+          </div>
+          
+          {/* Grain Effect Toggle */}
+          <div className="grain-control">
+            <div 
+              className={`grain-toggle ${document.querySelector('[data-prism-grain-effect="true"]') ? 'active' : ''}`}
+              onClick={() => {
+                const container = document.querySelector('[data-prism-preview-container]');
+                if (container) {
+                  const currentValue = container.getAttribute('data-prism-grain-effect');
+                  container.setAttribute('data-prism-grain-effect', currentValue === 'true' ? 'false' : 'true');
+                  // Force re-render
+                  setProperties({...properties});
+                }
+              }}
+            >
+              <div className="grain-toggle-knob"></div>
+            </div>
+            <span className="grain-label">Grain Texture</span>
+          </div>
+          
+          {/* Grain Intensity Slider */}
+          <div className="grain-slider-control" style={{ 
+            display: document.querySelector('[data-prism-grain-effect="true"]') ? 'block' : 'none' 
+          }}>
+            <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }}>
+              Intensity: <span id="grain-intensity-value">3%</span>
+            </label>
+            <input
+              type="range"
+              className="grain-slider"
+              min="1"
+              max="10"
+              defaultValue="3"
+              onChange={(e) => {
+                const intensity = parseInt(e.target.value) / 100;
+                const style = document.createElement('style');
+                style.id = 'prism-grain-intensity';
+                const existingStyle = document.getElementById('prism-grain-intensity');
+                if (existingStyle) existingStyle.remove();
+                style.textContent = `[data-prism-grain-effect="true"]::before { opacity: ${intensity} !important; }`;
+                document.head.appendChild(style);
+                const display = document.getElementById('grain-intensity-value');
+                if (display) display.textContent = e.target.value + '%';
+              }}
+            />
+          </div>
+        </div>
+      </div>
+      
+      {/* Element Properties */}
       <div className="properties-list">
+        
         {Object.entries(properties)
           .sort(([a], [b]) => {
             // Prioritize pageBackground at the very top
@@ -2326,24 +2414,28 @@ const LandingPage = ({
   onOpenProject,
   onDeleteDesign,
   formatTimestamp,
-  error
+  error,
+  generationMode,
+  onGenerationModeChange
 }: {
   savedDesigns: SavedDesign[];
   isLoading: boolean;
   selectedModel: 'claude-3-5-haiku' | 'claude-4';
   onModelChange: (model: 'claude-3-5-haiku' | 'claude-4') => void;
-  onSubmit: (prompt: string) => void;
+  onSubmit: (prompt: string, useVariants: boolean) => void;
   onOpenProject: (design: SavedDesign) => void;
   onDeleteDesign: (id: string) => void;
   formatTimestamp: (timestamp: number) => string;
   error: string | null;
+  generationMode: 'single' | 'variants';
+  onGenerationModeChange: (mode: 'single' | 'variants') => void;
 }) => {
   const [inputPrompt, setInputPrompt] = useState('');
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputPrompt.trim()) return;
-    onSubmit(inputPrompt);
+    onSubmit(inputPrompt, generationMode === 'variants');
   };
 
   return (
@@ -2370,6 +2462,20 @@ const LandingPage = ({
                 >
                   <option value="claude-4">Claude 4 (Default - Best Quality)</option>
                   <option value="claude-3-5-haiku">Claude 3.5 Haiku (Cheapest - Fast)</option>
+                </select>
+              </div>
+              
+              <div className="generation-mode-selector">
+                <label htmlFor="generation-mode-select">Generation:</label>
+                <select
+                  id="generation-mode-select"
+                  value={generationMode}
+                  onChange={(e) => onGenerationModeChange(e.target.value as 'single' | 'variants')}
+                  className="generation-mode-dropdown"
+                  disabled={isLoading}
+                >
+                  <option value="single">Single Design</option>
+                  <option value="variants">2 Variants (A/B)</option>
                 </select>
               </div>
             </div>
@@ -2483,6 +2589,7 @@ function App() {
   const [prompt, setPrompt] = useState('');
   const [inputPrompt, setInputPrompt] = useState(''); // Separate state for input field
   const [selectedModel, setSelectedModel] = useState<'claude-3-5-haiku' | 'claude-4'>('claude-4');
+  const [generationMode, setGenerationMode] = useState<'single' | 'variants'>('single');
   const [isLoading, setIsLoading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPresetsPanelOpen, setIsPresetsPanelOpen] = useState(false);
@@ -2501,6 +2608,12 @@ function App() {
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [viewTransition, setViewTransition] = useState(false);
+  
+  // Design Variants Feature
+  const [showVariantSelector, setShowVariantSelector] = useState(false);
+  const [variantA, setVariantA] = useState<GeneratedResult | null>(null);
+  const [variantB, setVariantB] = useState<GeneratedResult | null>(null);
+  const [generatingVariants, setGeneratingVariants] = useState(false);
   
   // Simple state for new edit mode
   const [editMode, setEditMode] = useState(false); 
@@ -3577,8 +3690,131 @@ What would you like to adjust or explore next?`;
     }, 100);
   };
 
-  const handleSubmit = async (submittedPrompt: string) => {
+  // Generate two design variants in parallel
+  const generateVariants = async (submittedPrompt: string) => {
+    console.log('🎨 [Variants] Generating two design variations...');
+    setGeneratingVariants(true);
+    setShowVariantSelector(false);
+    setVariantA(null);
+    setVariantB(null);
+    
+    // Create two different prompts for variety
+    const basePrompt = enhancePromptWithPremiumDesignV3(submittedPrompt.trim());
+    
+    const variantAPrompt = basePrompt + `\n\n**DESIGN VARIATION A - Bold & Vibrant**:
+    - Use bold, saturated colors (blues, purples, vibrant gradients)
+    - Modern, geometric card shapes with strong shadows
+    - High contrast elements
+    - Energetic, dynamic feel`;
+    
+    const variantBPrompt = basePrompt + `\n\n**DESIGN VARIATION B - Minimal & Elegant**:
+    - Use subtle, muted colors (grays, soft pastels, gentle gradients)
+    - Clean, minimal card shapes with soft shadows
+    - Refined spacing and typography
+    - Calm, sophisticated feel`;
+    
+    try {
+      // Send both requests in parallel
+      const [responseA, responseB] = await Promise.all([
+        fetch('http://localhost:3001/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            prompt: variantAPrompt,
+            model: selectedModel,
+            metadata: { designSystem: 'premium', variant: 'A' }
+          }),
+        }),
+        fetch('http://localhost:3001/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            prompt: variantBPrompt,
+            model: selectedModel,
+            metadata: { designSystem: 'premium', variant: 'B' }
+          }),
+        })
+      ]);
+      
+      const [dataA, dataB] = await Promise.all([
+        responseA.json(),
+        responseB.json()
+      ]);
+      
+      if (dataA.success && dataB.success) {
+        setVariantA({
+          code: dataA.code,
+          prompt: submittedPrompt.trim(),
+          timestamp: Date.now(),
+          id: generateId()
+        });
+        
+        setVariantB({
+          code: dataB.code,
+          prompt: submittedPrompt.trim(),
+          timestamp: Date.now(),
+          id: generateId()
+        });
+        
+        setShowVariantSelector(true);
+        console.log('✅ [Variants] Both variants generated successfully');
+      } else {
+        throw new Error('Variant generation failed');
+      }
+    } catch (err) {
+      console.error('❌ [Variants] Error generating variants:', err);
+      // Fall back to regular single generation
+      handleSubmit(submittedPrompt);
+    } finally {
+      setGeneratingVariants(false);
+    }
+  };
+
+  // Handle variant selection
+  const handleVariantSelect = async (variant: 'A' | 'B') => {
+    console.log(`🎨 [Variants] User selected Variant ${variant}`);
+    const selectedVariant = variant === 'A' ? variantA : variantB;
+    
+    if (!selectedVariant) return;
+    
+    setShowVariantSelector(false);
+    setGeneratedResult(selectedVariant);
+    setEditedCode(selectedVariant.code);
+    
+    // Set view transition state first
+    setViewTransition(true);
+    setTimeout(() => {
+      setCurrentView('editor-workspace');
+      setViewTransition(false);
+    }, 100);
+    
+    // Add to chat
+    addChatMessage('user', selectedVariant.prompt);
+    addChatMessage('assistant', `✅ You selected **Variant ${variant}** - ${variant === 'A' ? 'Bold & Vibrant' : 'Minimal & Elegant'} design!`);
+    
+    // Auto-save the selected design
+    const thumbnail = await generateThumbnail(selectedVariant.code);
+    const savedDesign: SavedDesign = {
+      id: selectedVariant.id,
+      prompt: selectedVariant.prompt,
+      code: selectedVariant.code,
+      timestamp: selectedVariant.timestamp,
+      thumbnail: thumbnail,
+      edits: [],
+    };
+    
+    setSavedDesigns(prev => [savedDesign, ...prev]);
+    addChatMessage('assistant', `Design automatically saved: "${selectedVariant.prompt}"`);
+  };
+
+  const handleSubmit = async (submittedPrompt: string, useVariants: boolean = false) => {
     if (!submittedPrompt.trim()) return;
+    
+    // Check if user chose to generate variants
+    if (useVariants) {
+      await generateVariants(submittedPrompt);
+      return;
+    }
     
     console.log('🔧 handleSubmit called with prompt:', submittedPrompt.trim());
     
@@ -3586,8 +3822,8 @@ What would you like to adjust or explore next?`;
     setChatMessages([]);
     
     // Enhance the user's prompt with premium design constraints
-    const enhancedPrompt = enhancePromptWithPremiumDesign(submittedPrompt.trim());
-    console.log('✨ [Prism] Enhanced prompt with premium design constraints');
+    const enhancedPrompt = enhancePromptWithPremiumDesignV3(submittedPrompt.trim());
+    console.log('✨ [Prism v3] Enhanced prompt with flexible premium guidelines');
     
     // Set the main prompt state only when submitting
     setPrompt(submittedPrompt.trim());
@@ -4669,6 +4905,8 @@ ${extractedJs}`;
             onDeleteDesign={deleteSavedDesign}
             formatTimestamp={formatTimestamp}
             error={error}
+            generationMode={generationMode}
+            onGenerationModeChange={setGenerationMode}
           />
         </div>
       ) : (
@@ -4702,6 +4940,82 @@ ${extractedJs}`;
             isFullscreen={isFullscreen}
             setIsFullscreen={setIsFullscreen}
           />
+        </div>
+      )}
+      
+      {/* Variant Selector Overlay */}
+      {(showVariantSelector || generatingVariants) && (
+        <div className="variant-selector-overlay">
+          <div className="variant-selector-container">
+            <div className="variant-selector-header">
+              <h2>Choose Your Design Style</h2>
+              <p>We've generated two design variations for you. Pick the one you like!</p>
+            </div>
+            
+            {generatingVariants ? (
+              <div className="variants-loading">
+                <div className="loading-spinner"></div>
+                <p>Generating two design variations...</p>
+                <span className="loading-subtext">This may take a moment</span>
+              </div>
+            ) : (
+              <div className="variants-grid">
+                {/* Variant A */}
+                <div className="variant-card">
+                  <div className="variant-header">
+                    <div className="variant-badge variant-a">Variant A</div>
+                    <div className="variant-label">Bold & Vibrant</div>
+                  </div>
+                  <div className="variant-preview">
+                    {variantA && (
+                      <iframe
+                        srcDoc={variantA.code}
+                        className="variant-iframe"
+                        title="Variant A Preview"
+                        sandbox="allow-scripts"
+                      />
+                    )}
+                  </div>
+                  <div className="variant-description">
+                    <p>Modern design with bold colors, strong shadows, and high contrast</p>
+                  </div>
+                  <button 
+                    className="variant-select-btn variant-a-btn"
+                    onClick={() => handleVariantSelect('A')}
+                  >
+                    Select This Design
+                  </button>
+                </div>
+                
+                {/* Variant B */}
+                <div className="variant-card">
+                  <div className="variant-header">
+                    <div className="variant-badge variant-b">Variant B</div>
+                    <div className="variant-label">Minimal & Elegant</div>
+                  </div>
+                  <div className="variant-preview">
+                    {variantB && (
+                      <iframe
+                        srcDoc={variantB.code}
+                        className="variant-iframe"
+                        title="Variant B Preview"
+                        sandbox="allow-scripts"
+                      />
+                    )}
+                  </div>
+                  <div className="variant-description">
+                    <p>Clean design with subtle colors, soft shadows, and refined spacing</p>
+                  </div>
+                  <button 
+                    className="variant-select-btn variant-b-btn"
+                    onClick={() => handleVariantSelect('B')}
+                  >
+                    Select This Design
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
